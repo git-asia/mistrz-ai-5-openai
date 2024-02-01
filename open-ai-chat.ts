@@ -12,11 +12,26 @@ const parameters: ChatCompletionCreateParamsBase = {
     stream: false,
     model: 'gpt-4-1106-preview',
     messages: [],
-    response_format: { type: 'json_object' },
-}
+    functions: [
+        {
+            name: 'answerSentiment',
+            description: 'Always respond to sentiment questions using this function call.',
+            parameters: {
+                type: 'object',
+                properties: {
+                    sentiment: {
+                        type: 'string',
+                        description: 'Sentiment of the text.',
+                        enum: ['positive', 'neutral', 'negative'],
+                    },
+                },
+            },
+        },
+    ],
+};
 
 
-const extractFirstChoiceText = (msg: OpenAI.Chat.Completions.ChatCompletion): string | null => {
+const extractFirstChoice = (msg: OpenAI.Chat.Completions.ChatCompletion): string | null => {
     return msg?.choices?.[0]?.message?.content ?? null;
 }
 
@@ -46,7 +61,7 @@ export class OpenAiChat {
             messages: this.messages,
         })
 
-        const s = extractFirstChoiceText(data as ChatCompletion)
+        const s = extractFirstChoice(data as ChatCompletion)
 
         if (s) {
             this.messages.push({
