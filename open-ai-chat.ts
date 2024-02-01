@@ -77,17 +77,17 @@ export class OpenAiChat {
         const data = await this.openai.chat.completions.create({
             ...parameters,
             messages: this.messages,
-        })
+        });
 
-        const s = extractFirstChoice(data as ChatCompletion)
+        const msg = extractFirstChoice(data as ChatCompletion)
 
-        if (s) {
+        if (msg?.content) {
             this.messages.push({
                 role: 'assistant',
-                content: s,
+                content: msg.content,
             });
         }
-        return s ? JSON.parse(s) : null;
+        return msg;
     }
     clear() {
         this.messages.splice(1);
