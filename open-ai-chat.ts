@@ -3,6 +3,7 @@ import {ChatCompletionAssistantMessageParam, ChatCompletionCreateParamsBase} fro
 import {Chat} from "openai/resources";
 import ChatCompletion = Chat.ChatCompletion;
 import { OPENAI_API_KEY } from "./config";
+import ChatCompletionRole = Chat.ChatCompletionRole;
 
 const parameters: ChatCompletionCreateParamsBase = {
     n: 1,
@@ -62,11 +63,16 @@ export class OpenAiChat {
         ]
     }
 // stosujemy 'any' a nie 'string'. gdyż możemy chcieć zwrócić obiekt
-    async say(prompt: string): Promise<any | null> {
+    async say(
+        prompt: string,
+        role: ChatCompletionRole = 'user',
+        functionName?: string,
+    ): Promise<any | null> {
         this.messages.push({
-            role: 'user',
+            role,
             content: prompt,
-        });
+            name: functionName,
+        } as ChatCompletionAssistantMessageParam);
 
         const data = await this.openai.chat.completions.create({
             ...parameters,
