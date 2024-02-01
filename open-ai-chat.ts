@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import {ChatCompletionCreateParamsBase} from "openai/resources/chat/completions";
+import {ChatCompletionAssistantMessageParam, ChatCompletionCreateParamsBase} from "openai/resources/chat/completions";
 import {Chat} from "openai/resources";
 import ChatCompletion = Chat.ChatCompletion;
 import { OPENAI_API_KEY } from "./config";
@@ -30,9 +30,21 @@ const parameters: ChatCompletionCreateParamsBase = {
     ],
 };
 
+export type ChatResponse = null | {
+    content: null | string;
+    functionCall: null | ChatCompletionAssistantMessageParam.FunctionCall;
+}
 
-const extractFirstChoice = (msg: OpenAI.Chat.Completions.ChatCompletion): string | null => {
-    return msg?.choices?.[0]?.message?.content ?? null;
+const extractFirstChoice = (msg: OpenAI.Chat.Completions.ChatCompletion): ChatResponse => {
+    const firstChoice = msg?.choices?.[0]?.message;
+
+    if (!firstChoice) {
+        return null;
+    }
+    return {
+        content: firstChoice.content ?? null,
+        functionCall: firstChoice.function_call ?? null,
+    }
 }
 
 export class OpenAiChat {
