@@ -1,7 +1,7 @@
 import {ChatCompletionAssistantMessageParam} from "openai/resources/chat/completions";
 
 enum CallableFunctions {
-    AnswerSentiment = 'answerSentiment',
+    AnswerTextAnalysis = 'answerTextAnalysis',
 }
 
 enum Sentiment {
@@ -10,20 +10,22 @@ enum Sentiment {
     Negative = 'negative',
 }
 
-interface AnswerSentimentArgs {
+interface AnswerTextAnalysisArgs {
     sentiment: Sentiment;
+    subject: string;
+    keyword: string;
 }
 
-const answerSentiment = ({sentiment}: AnswerSentimentArgs) => {
-    console.log('Sentiment is', sentiment);
+const answerTextAnalysis = (data: AnswerTextAnalysisArgs) => {
+    console.log('Text analysis result is', data);
     return 'Ok';
 }
 
 export const handleCalledFunction = (call: ChatCompletionAssistantMessageParam.FunctionCall): string => {
     try {
         switch (call.name as CallableFunctions) {
-            case CallableFunctions.AnswerSentiment:
-                return answerSentiment(JSON.parse(call.arguments));
+            case CallableFunctions.AnswerTextAnalysis:
+                return answerTextAnalysis(JSON.parse(call.arguments));
 
             default:
                 throw new Error('Unknown function name.');

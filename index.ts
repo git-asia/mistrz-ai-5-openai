@@ -4,7 +4,7 @@ import {handleCalledFunction} from "./callable-functions";
 (async () => {
     const chat = new OpenAiChat('Jesteś świetnym klasyfikatorem tekstów. Zwracasz odpowiedzi w formacie json wywołując funkcje.');
 
-    const ans = await chat.say('Zwróć sentyment tego tekstu:\n\n"Nigdy nie nauczę się języka hiszpańskiego."');
+    const ans = await chat.say('Zwróć analizę tego tekstu:\n\n"Nigdy nie nauczę się języka hiszpańskiego."');
 
     console.log(ans)
 

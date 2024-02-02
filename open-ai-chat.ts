@@ -15,8 +15,8 @@ const parameters: ChatCompletionCreateParamsBase = {
     messages: [],
     functions: [
         {
-            name: 'answerSentiment',
-            description: 'Always respond to sentiment questions using this function call.',
+            name: 'answerTextAnalysis',
+            description: 'Always respond to text analysis questions using this function call.',
             parameters: {
                 type: 'object',
                 properties: {
@@ -24,6 +24,14 @@ const parameters: ChatCompletionCreateParamsBase = {
                         type: 'string',
                         description: 'Sentiment of the text.',
                         enum: ['positive', 'neutral', 'negative'],
+                    },
+                    subject: {
+                        type: 'string',
+                        description: 'Subject of the text.',
+                    },
+                    keyword: {
+                        type: 'string',
+                        description: 'Most important word of the text.',
                     },
                 },
             },
