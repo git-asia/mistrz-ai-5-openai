@@ -1,13 +1,18 @@
 import {OpenAiChat} from "./open-ai-chat";
+import {handleCalledFunction} from "./callable-functions";
 
 (async () => {
     const chat = new OpenAiChat('Jesteś świetnym klasyfikatorem tekstów. Zwracasz odpowiedzi w formacie json wywołując funkcje.');
 
-    console.log(await chat.say('Zwróć sentyment tego tekstu:\n\n"Nigdy nie nauczę się języka hiszpańskiego."'));
-    console.log(await chat.say('Zwróć temat tego tekstu jako `topic`'));
-    console.log(await chat.say('Zwróć słowo kluczowe tego tekstu jako `keyword`'));
+    const ans = await chat.say('Zwróć sentyment tego tekstu:\n\n"Nigdy nie nauczę się języka hiszpańskiego."');
 
-    console.log(chat.history);
+    console.log(ans)
+
+    if (ans.functionCall) {
+        const res = handleCalledFunction(ans.functionCall);
+        await chat.say(res, 'function', ans.functionCall.name);
+    }
+
 })();
 
 
